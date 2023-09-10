@@ -17,7 +17,7 @@
 #define BOTAO_4 4         // Pino do Botão 4
 #define BOTAO_5 3         // Pino do Botão 5
 #define BOTAO_6 2         // Pino do Botão 6
-#define BUZZER  17
+#define BUZZER  17        // Pino Do Buzzer
 
 const int buttonPin[] = {BOTAO_1, BOTAO_2, BOTAO_3};  // Pinos dos Botões 1, 2 e 3
 const int ledPin[] = {LED_VERMELHO, LED_VERDE, LED_AZUL};  // Pinos dos LEDs Vermelho, Verde e Azul
