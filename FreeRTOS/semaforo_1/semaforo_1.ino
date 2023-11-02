@@ -43,19 +43,19 @@ void setup()
 }
 
 void loop() {
-  digitalWrite(LED,!digitalRead(LED));
-  Serial.println("Valor do LED: " + String(digitalRead(LED)));
-  vTaskDelay(pdMS_TO_TICKS(3000));
-  xSemaphoreGive(xSemaphore);
+  digitalWrite(LED,!digitalRead(LED));                          //Inverte o estado do LED
+  Serial.println("Valor do LED: " + String(digitalRead(LED)));  //Imprime o estado do LED
+  vTaskDelay(pdMS_TO_TICKS(3000));                              //Delay de 3 segundos
+  xSemaphoreGive(xSemaphore);                                   //Libera o semaforo
 }
 
 void vTaskADC(void * pvParameters){
 
-  int adcValue;
+  int adcValue; //Variável para armazenar o valor do ADC
 
   while(1){
-   xSemaphoreTake(xSemaphore,portMAX_DELAY);
-   adcValue = analogRead(1);
-   Serial.println("Valor do ADC: " + String(adcValue));
+   xSemaphoreTake(xSemaphore,portMAX_DELAY);              //espera o semaforo ser liberado
+   adcValue = analogRead(1);                              //Realiza a leitura do ADC
+   Serial.println("Valor do ADC: " + String(adcValue));   //Imprime o valor do ADC
   }
 }
