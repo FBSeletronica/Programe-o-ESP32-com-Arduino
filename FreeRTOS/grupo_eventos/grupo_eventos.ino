@@ -1,5 +1,5 @@
 /*********************************************************
-* Exemplo para demonstrar o uso de software timer
+* Exemplo para demonstrar o uso de grupos de eventos
 * Por: Fábio Souza
 *********************************************************/
 #define LED_VERMELHO 14   // Pino do LED Vermelho
