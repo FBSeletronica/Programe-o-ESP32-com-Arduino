@@ -15,7 +15,7 @@
 
 const int LED1 = LED_VERMELHO;  // Pino do LED 1
 const int LED2 = 33;            // Pino do LED 2
-const int BUTTON1 = BOTAO_2;    // Pino do Botão 1
+const int BUTTON1 = BOTAO_6;    // Pino do Botão 1
 
 /*inclusão das Biblioteca do FreeRTOS*/
 #include "freertos/FreeRTOS.h"
