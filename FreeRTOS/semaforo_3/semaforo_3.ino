@@ -31,13 +31,7 @@ void vTaskTrataBT(void * pvParameters); // protótipo da task que trata o botão
 void ISR_CallBack(){
 
   BaseType_t xHighPriorityTaskWoken = pdTRUE;                       // variável para verificar se a task de maior prioridade foi liberada
-
   xSemaphoreGiveFromISR(semaforoContador,&xHighPriorityTaskWoken);  // libera o semaforo contador
-
-  if(xHighPriorityTaskWoken == pdTRUE)                          // verifica se a task de maior prioridade foi liberada
-  {
-    portYIELD_FROM_ISR();                                      // faz a troca de contexto para a task de maior prioridade
-  }
 
 }
 
