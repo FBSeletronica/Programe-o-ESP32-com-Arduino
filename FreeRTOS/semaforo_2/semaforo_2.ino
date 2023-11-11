@@ -34,11 +34,6 @@ void ISR_CallBack(){
   BaseType_t xHighPriorityTaskWoken = pdTRUE;                 // variável para verificar se a task de maior prioridade deve ser executada
   xSemaphoreGiveFromISR(semaforo,&xHighPriorityTaskWoken);    // libera o semaforo e verifica se a task de maior prioridade deve ser executada
 
-  if(xHighPriorityTaskWoken == pdTRUE)                        // verifica se a task de maior prioridade deve ser executada
-  {
-    portYIELD_FROM_ISR();                                     // força o retorno da interrupção para a task de maior prioridade
-  }
-
 }
 
 void setup() {
