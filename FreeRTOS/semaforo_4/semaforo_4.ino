@@ -37,7 +37,7 @@ void enviaInformacao(char msg[],int i){
   Serial.print(" : ");
   delay(200);
   Serial.println(i);
-  //delay(1000);
+  delay(1000);
   xSemaphoreGive(mutex);                                        //libera o semaforo
 
 }
