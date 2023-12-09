@@ -90,8 +90,26 @@ void loop()
     Serial.println("Reconectando ao WiFi...");
     WiFi.disconnect();
     WiFi.reconnect();
+
+    // Aguarda a conexão com a rede WiFi
+    Serial.print("Conectando no WiFi ..");    
+    while (WiFi.status() != WL_CONNECTED) 
+    {
+      Serial.print('.');
+      delay(500);
+    }
+
+
+    // Mostra os dados da conexão
+    Serial.println("");
+    Serial.println("WiFi Conectado");
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("RSSI: ");
+    Serial.println(WiFi.RSSI());
   }
-  else{
+  else
+  {
     update_led_status(CONNECTED);            // Sinaliza que está conectado
   }
 
