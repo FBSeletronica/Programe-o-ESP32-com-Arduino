@@ -15,24 +15,24 @@ void setup()
     WiFi.disconnect();              // Desconecta do WiFi, caso esteja conectado
     delay(100);                     // Aguarda 100ms
 
-    Serial.println("Setup done");   // Imprime na serial que o setup foi concluído
+    Serial.println("Setup Finalizado");   // Imprime na serial que o setup foi concluído
 }
 
 void loop()
 {
-    Serial.println("Scan start");               // Imprime na serial que o scan foi iniciado
+    Serial.println("Iniciando Scanner");               // Imprime na serial que o scan foi iniciado
 
     int n = WiFi.scanNetworks();                // Inicia o scan das redes WiFi disponíveis
-    Serial.println("Scan done");                // Imprime na serial que o scan foi concluído
+    Serial.println("Scanner Finalizado");                // Imprime na serial que o scan foi concluído
 
     if (n == 0)                                 // Se nenhuma rede for encontrada
     {
-        Serial.println("no networks found");    // Imprime na serial que nenhuma rede foi encontrada
+        Serial.println("Não foi encontrada nenhuma rede");    // Imprime na serial que nenhuma rede foi encontrada
     } else 
     {
         //formatação da tabela de redes encontradas
         Serial.print(n);                        
-        Serial.println(" networks found");      
+        Serial.println(" redes encontradas");      
         Serial.println("Nr | SSID                             | RSSI | CH | Encryption");
 
         // Loop para imprimir as redes encontradas
