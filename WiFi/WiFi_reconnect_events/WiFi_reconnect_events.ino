@@ -76,6 +76,7 @@ void setup(){
   pinMode(WIFI_DISCONNECTED, OUTPUT);        // Define o pino do LED de Desconectado como saída
 
   WiFi.mode(WIFI_STA);
+  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
   WiFi.setHostname(hostname); //define hostname
   WiFi.disconnect(true);    //Desconecta de qualquer rede WiFi
   delay(1000);              //Delay de 1s    
