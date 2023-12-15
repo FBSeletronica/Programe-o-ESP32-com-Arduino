@@ -141,6 +141,20 @@ void loop() {
       // Envia a requisição HTTP POST
       int httpResponseCode = http.POST(httpRequestData);
       
+      //se o código de resposta for maior que zero, significa que a requisição foi bem sucedida
+      if (httpResponseCode>0) 
+      {
+        Serial.print("Código de Resposta HTTP: ");
+        Serial.println(httpResponseCode);
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+      else  //se o código de resposta for menor ou igual a zero, significa que a requisição falhou
+      {
+        Serial.print("Código de Erro: ");
+        Serial.println(httpResponseCode);
+      }
+
       // libera os recursos
       http.end();
     }
