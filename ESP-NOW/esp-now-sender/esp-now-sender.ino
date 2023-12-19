@@ -7,6 +7,8 @@
  * Autor: Fábio Souza
  * Data: 14/12/2023
 */
+
+//mapa de pinos da Franzininho WIFI LAB01
 #define LED_VERMELHO 14   // Pino do LED Vermelho
 #define LED_VERDE 13      // Pino do LED Verde
 #define LED_AZUL 12       // Pino do LED Azul
@@ -18,9 +20,9 @@
 #define BOTAO_6 2         // Pino do Botão 6
 #define BUZZER  17        // Pino Do Buzzer
 
-
-#include <esp_now.h>
+// Bibliotecas necessárias
 #include <WiFi.h>
+#include <esp_now.h>
 
 const int buttonPin = BOTAO_6;      // Pino do Botão
 
@@ -30,18 +32,19 @@ unsigned long lastDebounceTime = 0; // Último tempo de debounce
 int buttonState = HIGH;             // Estado atual do botão
 int lastButtonState = HIGH;         // Último estado do botão
 
-// REPLACE WITH YOUR RECEIVER MAC Address
-uint8_t broadcastAddress[] = {0x34,0xB4,0x72,0x6B,0xD4,0xB2};
+//mac address do receptor (troque para o mac da sua placa)
+uint8_t receiverAddress[] = {0x34,0xB4,0x72,0x6B,0xD4,0xB2};
 
 //variável para status do LED
 uint8_t ledStatus = false;
 
-esp_now_peer_info_t peerInfo;
+esp_now_peer_info_t peerInfo;      //Estrutura de configuração do receptor
 
-// callback when data is sent
-void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  Serial.print("\r\nLast Packet Send Status:\t");
-  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+// função de callback no envio
+void esp_now_send_callback(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  //Exibe o status do envio
+  Serial.print("Status do ultimo pacote enviado: ");
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Enviado com Sucesso" : "Falha no envio");
 }
  
 void setup() {
@@ -58,10 +61,10 @@ void setup() {
     return;                                       //Retorna ao loop
   }
 
-  esp_now_register_send_cb(OnDataSent);           //Registra a função de callback
+  esp_now_register_send_cb(esp_now_send_callback);           //Registra a função de callback
                                                   //para o envio de dados
   //Registra o receptor
-  memcpy(peerInfo.peer_addr, broadcastAddress, 6);  //Copia o endereço MAC do receptor
+  memcpy(peerInfo.peer_addr, receiverAddress, 6);  //Copia o endereço MAC do receptor
   peerInfo.channel = 0;                             //Configura o canal do ESP-NOW
   peerInfo.encrypt = false;                         //Configura a criptografia
   
@@ -94,16 +97,9 @@ void loop()
         esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)msg.c_str(), msg.length()); // Envia a mensagem via ESP-NOW
         Serial.print("Enviando dados: ");                         // Exibe uma mensagem
         Serial.println(ledStatus); // Exibe o estado do LED
-        Serial.print("Resultado do envio: ");                     // Exibe uma mensagem
-        Serial.println(result == ESP_OK ? "Sucesso" : "Falha");   // Exibe o resultado do envio
       }
     }
   }
-  lastButtonState = reading;                                      // Atualiza o último estado do
-
-
-
-  
-  
+  lastButtonState = reading;                    // Atualiza o ultimo estado do botão
 
 }
