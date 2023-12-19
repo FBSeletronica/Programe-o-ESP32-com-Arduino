@@ -23,7 +23,7 @@
 const int ledVerdePin = LED_VERDE;
 
 // Função de callback para receber dados
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len)
+void esp_now_recv_callback(const uint8_t * mac, const uint8_t *incomingData, int len)
 {
   //imprime mensagem recebida
   Serial.print("Mensagem recebida de: ");
@@ -58,7 +58,7 @@ void setup() {
   }
   
   // Configura a função de callback para receber dados
-  esp_now_register_recv_cb(OnDataRecv);
+  esp_now_register_recv_cb(esp_now_recv_callback);
 }
  
 void loop() {
