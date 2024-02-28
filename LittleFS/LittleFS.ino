@@ -32,6 +32,8 @@ unsigned long lastDebounceTime[] = {0, 0};      // Último tempo de debounce par
 int buttonState[] = {HIGH, HIGH};       // Estado atual de cada botão
 int lastButtonState[] = {HIGH, HIGH};   // Último estado de cada botão
 
+int dado;
+
 /* You only need to format LittleFS the first time you run a
    test or else use the LITTLEFS plugin to create a partition
    https://github.com/lorol/arduino-esp32littlefs-plugin
@@ -208,7 +210,7 @@ void loop()
           switch (i)
           {
             case 0:
-                int dado = random (0, 1000);            
+                dado = random (0, 5000);            
                 appendFile(LittleFS, "/data.txt", (String(dado)+ "\r\n").c_str()); //Adiciona um dado ao arquivo
             break;
             case 1:
