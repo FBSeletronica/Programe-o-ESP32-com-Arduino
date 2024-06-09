@@ -1,9 +1,8 @@
 /*
- * Exemplo de entrada digital com debounce de tecla
+ * Exemplo de USB Consumer Control Lib
  * 
- * descrição: Este exemplo faz a leitura de uma entrada digital conectada a um botão
- * e inverte o estado do LED
- * objetivo: Demonstrar o uso de entrada digital com rotina de debounce
+ * descrição: Este Exemplo envia comnado para controle do PC
+ * objetivo: Demonstrar o uso da biblioteca USB Consumer Control
  * 
  * Autor: Fábio Souza
  * data: 06/09/2023
@@ -88,4 +87,3 @@ void loop() {
   }
   previousButtonPrevState = buttonPrevState;
 }
-
