@@ -15,9 +15,9 @@
 #include <ESP_I2S.h>
 
 // Definição dos pinos (ajuste conforme sua conexão)
-#define I2S_BCLK  34  // Bit Clock
-#define I2S_LRCLK 35  // Word Select
-#define I2S_DIN   33  // Data In
+#define I2S_WS  35  // LRCLK (Word Select)
+#define I2S_SCK 34  // BCLK (Bit Clock)
+#define I2S_SD  33  // DIN (Data In)
 
 // Configurações do áudio
 #define SAMPLE_RATE 16000    // 16 kHz de taxa de amostragem
@@ -31,10 +31,10 @@ void setup() {
   
     // Configurar pinos I2S
     i2s.setPins(
-    I2S_BCLK,   // BCK
-    I2S_LRCLK,  // WS
+    I2S_SCK,    // BCK
+    I2S_WS,     // WS
     -1,         // DOUT (não usado)
-    I2S_DIN,    // DIN
+    I2S_SD,     // DIN
     -1          // MCLK (opcional)
   );
   
