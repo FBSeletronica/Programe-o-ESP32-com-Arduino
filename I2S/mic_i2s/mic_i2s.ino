@@ -4,6 +4,9 @@
  * descrição: Este código é um exemplo de utilização do microfone INMP441 com o ESP32 
  * utilizando a bilbioteca ESP_I2S
  * objetivo: Entender o funcionamento bãsico da interface I2S
+ *
+ *  Este código é parte do curso "Programe o ESP32 com Arduino" do Embarcados: 
+ *  https://cursos.embarcados.com.br/cursos/franzininho-wifi-arduino-ide/
  *  
  * Autor: Fábio Souza
  * data: 26/02/2025
