@@ -38,7 +38,7 @@ void taskEnviarDHT(void *parameter);  // Função da task que lê e envia os dad
 void setupWiFi() 
 {
   WiFi.begin(ssid, password);             // Conecta na rede Wi-Fi configurada 
-  Serial.print("Conectando ao WiFi");     // Aguarda a conexão com a rede
+  Serial.print("Conectando ao WiFi...");     // Aguarda a conexão com a rede
   while (WiFi.status() != WL_CONNECTED)   // Verifica o status da conexão e aguarda até que a conexão seja estabelecida  
   {
     delay(500);                           // Aguarda 500ms
