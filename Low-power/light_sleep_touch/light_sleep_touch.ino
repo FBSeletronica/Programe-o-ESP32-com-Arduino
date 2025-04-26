@@ -1,5 +1,5 @@
 /*
- * Exemplo de light Sleep com Wake up por GPIO
+ * Exemplo de light Sleep com Wake up por Touch
  *
  * Autor: Fábio Souza
  * Data: 26/04/2025
