@@ -1,0 +1,323 @@
+<!-- 
+ ESP32 BLE Dashboard
+ This HTML file is designed to work with an ESP32 device that uses Web Bluetooth API
+ to communicate with a web page. It displays sensor data and allows control of an LED.  
+ The page includes a header, main content area with sensor data and LED control buttons,
+ and a footer. The JavaScript code handles the Bluetooth connection, data retrieval,
+ and chart updates using Chart.js. The page is styled with CSS for a clean and modern look. 
+ The page is responsive and works well on both desktop and mobile devices.
+ The page is designed to be user-friendly and visually appealing, with a focus on
+ providing a good user experience. The use of Chart.js allows for easy visualization
+ of sensor data, making it easy to understand and analyze. The page is designed to be
+ easy to maintain and extend, with clear separation of HTML, CSS, and JavaScript.
+ Created by Fábio Souza, 2025 
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESP32 BLE Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .ble-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ble-buttons button {
+      padding: 6px 12px;
+      background: #ffffff22;
+      color: #fff;
+      border: 1px solid #ffffff33;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .ble-buttons button:hover {
+      background: #ffffff44;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #2c3e50;
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+
+    .label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .value {
+      font-weight: bold;
+      color: #222;
+    }
+
+    .status {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .status.connected {
+      color: #27ae60;
+    }
+
+    .status.disconnected {
+      color: #e74c3c;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .control-buttons button {
+      padding: 10px 20px;
+      border: none;
+      font-size: 15px;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .control-buttons button:hover {
+      background-color: #2980b9;
+    }
+
+    .control-buttons .off {
+      background-color: #e74c3c;
+    }
+
+    .control-buttons .off:hover {
+      background-color: #c0392b;
+    }
+
+    canvas {
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 40px;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ᚼᛒ ESP32 BLE Dashboard</h1>
+    <div class="ble-buttons">
+      <button id="connectBleButton">🔗 Connect</button>
+      <button id="disconnectBleButton">⛔ Disconnect</button>
+    </div>
+  </header>
+
+  <main>
+    <p class="label">BLE Status: <span id="bleState" class="status disconnected">Disconnected</span></p>
+
+    <h2>🌡 Sensor Data</h2>
+    <p class="label">📊 Reading: <span id="valueContainer" class="value">--</span></p>
+    <p class="label">🕒 Last Update: <span id="timestamp" class="value">--</span></p>
+
+    <canvas id="sensorChart" width="600" height="300"></canvas>
+
+    <h2>💡 LED Control</h2>
+    <div class="control-buttons">
+      <button id="onButton">Turn ON</button>
+      <button id="offButton" class="off">Turn OFF</button>
+    </div>
+    <p class="label">📤 Last Command: <span id="valueSent" class="value">--</span></p>
+  </main>
+
+  <footer>
+    Desenvolvido por <a href="https://www.linkedin.com/in/engfabiosouza/" target="_blank">Fábio Souza</a> • Powered by Web Bluetooth + Chart.js	
+  </footer>
+
+<script>
+  const connectButton = document.getElementById('connectBleButton');
+  const disconnectButton = document.getElementById('disconnectBleButton');
+  const onButton = document.getElementById('onButton');
+  const offButton = document.getElementById('offButton');
+  const bleStateContainer = document.getElementById('bleState');
+  const retrievedValue = document.getElementById('valueContainer');
+  const timestampContainer = document.getElementById('timestamp');
+  const latestValueSent = document.getElementById('valueSent');
+
+  const deviceName = 'ESP32_BLE_Sensor_LED';
+  const serviceUUID = '12345678-1234-1234-1234-1234567890ab';
+  const sensorUUID  = '12345678-1234-1234-1234-1234567890ac';
+  const ledUUID     = '12345678-1234-1234-1234-1234567890ad';
+
+  let bleServer;
+  let bleServiceFound;
+  let sensorCharacteristic;
+
+  // Chart.js setup
+  const ctx = document.getElementById('sensorChart').getContext('2d');
+  const labels = [];
+  const tempData = [];
+  const humData = [];
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Temperature (°C)',
+        data: tempData,
+        borderColor: '#e67e22',
+        backgroundColor: 'rgba(230, 126, 34, 0.1)',
+        tension: 0.2
+      }, {
+        label: 'Humidity (%)',
+        data: humData,
+        borderColor: '#3498db',
+        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        tension: 0.2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100
+        }
+      }
+    }
+  });
+
+  function updateChart(temp, hum) {
+    const time = new Date().toLocaleTimeString();
+    labels.push(time);
+    tempData.push(temp);
+    humData.push(hum);
+
+    if (labels.length > 20) {
+      labels.shift();
+      tempData.shift();
+      humData.shift();
+    }
+
+    chart.update();
+  }
+
+  connectButton.onclick = () => {
+    navigator.bluetooth.requestDevice({
+      filters: [{ name: deviceName }],
+      optionalServices: [serviceUUID]
+    })
+    .then(device => {
+      bleStateContainer.textContent = 'Connecting...';
+      bleStateContainer.className = 'status';
+      return device.gatt.connect();
+    })
+    .then(server => {
+      bleServer = server;
+      return server.getPrimaryService(serviceUUID);
+    })
+    .then(service => {
+      bleServiceFound = service;
+      return service.getCharacteristic(sensorUUID);
+    })
+    .then(characteristic => {
+      sensorCharacteristic = characteristic;
+      return characteristic.startNotifications().then(() => {
+        sensorCharacteristic.addEventListener('characteristicvaluechanged', handleSensorNotification);
+        bleStateContainer.textContent = 'Connected';
+        bleStateContainer.className = 'status connected';
+      });
+    })
+    .catch(error => {
+      console.error("Connection error:", error);
+      bleStateContainer.textContent = 'Error';
+      bleStateContainer.className = 'status disconnected';
+    });
+  };
+
+  disconnectButton.onclick = () => {
+    if (bleServer) {
+      bleServer.disconnect();
+      bleStateContainer.textContent = 'Disconnected';
+      bleStateContainer.className = 'status disconnected';
+    }
+  };
+
+  function handleSensorNotification(event) {
+    const value = new TextDecoder().decode(event.target.value);
+    retrievedValue.textContent = value;
+    timestampContainer.textContent = new Date().toLocaleString();
+
+    // Espera string no formato: "T: 23.0 C | U: 45.0 %"
+    const match = value.match(/T:\s*([\d.]+)\s*C\s*\|\s*U:\s*([\d.]+)\s*%/i);
+    if (match) {
+      const temp = parseFloat(match[1]);
+      const hum = parseFloat(match[2]);
+      updateChart(temp, hum);
+    }
+  }
+
+  function writeToLED(value) {
+    if (!bleServiceFound) return;
+    bleServiceFound.getCharacteristic(ledUUID)
+      .then(characteristic => {
+        return characteristic.writeValue(new TextEncoder().encode(value));
+      })
+      .then(() => {
+        latestValueSent.textContent = value;
+      })
+      .catch(error => console.error("Write failed:", error));
+  }
+
+  onButton.onclick = () => writeToLED("ON");
+  offButton.onclick = () => writeToLED("OFF");
+</script>
+
+</body>
+</html>
