@@ -1,6 +1,7 @@
 /*
  * Exemplo de uso do Bluetooth Low Energy (BLE) no ESP32
- * Descrição: Este exemplo demonstra como monitorar a temperatura e umidade usando o DHT11 e controlar um LED via BLE.
+ * Descrição: Este exemplo demonstra como monitorar a temperatura e umidade usando o DHT11 
+ * e controlar um LED via BLE.
  * 
  * Este exemplo foi desenvolvido para o curso Domine o ESP32 com Arduino: Da Base aos Projetos Avançados
  * LINK: https://cursos.embarcados.com.br/cursos/franzininho-wifi-arduino-ide/
