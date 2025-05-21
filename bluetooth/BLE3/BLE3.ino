@@ -1,7 +1,8 @@
 /*
  * Exemplo de uso do Bluetooth Low Energy (BLE) no ESP32
  * Descrição: Este exemplo demonstra como criar um serviço BLE UART no ESP32.
- * Ele permite a comunicação entre o ESP32 e um smartphone usando o aplicativo nRF Connect ou Serial Bluetooth Terminal.
+ * Ele permite a comunicação entre o ESP32 e um smartphone usando o aplicativo nRF Connect 
+ * ou Serial Bluetooth Terminal.
  * O ESP32 atua como servidor BLE e o smartphone como cliente.
  * O ESP32 pode enviar dados para o smartphone e receber dados do smartphone.
  * O serviço BLE UART é baseado no perfil GATT (Generic Attribute Profile).
