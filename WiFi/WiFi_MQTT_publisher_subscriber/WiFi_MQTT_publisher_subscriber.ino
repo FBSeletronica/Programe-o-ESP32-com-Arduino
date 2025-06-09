@@ -88,7 +88,7 @@ void connectMQTT()
 
 // Callback para processar mensagens recebidas do MQTT
 void callback(char* topic, byte* message, unsigned int length) 
-
+{
   String msg = "";                    // Cria uma string para armazenar a mensagem
   for (int i = 0; i < length; i++)    // Percorre a mensagem recebida
   {
