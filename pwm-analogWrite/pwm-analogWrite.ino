@@ -30,8 +30,8 @@ int fadeAmount = 5;    // Quantidade de aumento/diminuição de brilho a cada ci
 
 void setup() {
   pinMode(ledPin, OUTPUT);                  // Configura o pino do LED como saída
-  analogWriteResolution(PWM_RESOLUTION);    // Define a resolução do PWM  
-  analogWriteFrequency(PWM_FREQ);           // Define a frequência do PWM    
+  analogWriteResolution(ledPin,PWM_RESOLUTION);    // Define a resolução do PWM  
+  analogWriteFrequency(ledPin,PWM_FREQ);           // Define a frequência do PWM    
 }
 
 void loop() {
