@@ -4,6 +4,7 @@
  * 
  * Autor: Fábio Souza
  * data: 06/09/2023
+ * update:12/07/2025
  */
 
 // Definições de pinos da placa Franzininho WiFi LAB01
@@ -20,8 +21,8 @@
 
 // PWM com LEDC definições
 #define LEDC_CHANNEL_0     0          // Número do canal LEDC
-#define LEDC_TIMER_12_BIT  8         // Resolução do temporizador LEDC
-#define PWM_MAX_VALUE      255       // Valor máximo do PWM - 2^8 - 1
+#define LEDC_TIMER_BITS    8          // Resolução do temporizador LEDC
+#define PWM_MAX_VALUE      4095        // Valor máximo do PWM - 2^8 - 1
 #define LEDC_BASE_FREQ     5000       // Frequência base do PWM
 
 int brightness = 0;    // Variável para armazenar o brilho do LED
@@ -29,14 +30,17 @@ int fadeAmount = 5;    // Quantidade de aumento/diminuição de brilho a cada ci
 const int ledPin = LED_VERMELHO; // Define o número do pino GPIO para o LED
 
 void setup() {
-
-  ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_12_BIT); //configura o LEDC: canal 0, frequência base, resolução do temporizador
-  ledcAttachPin(ledPin, LEDC_CHANNEL_0);                       // conecta o pino GPIO ao canal LEDC
+  // Configura o pino para usar PWM com frequência e resolução definidas
+  bool ok = ledcAttach(ledPin, LEDC_BASE_FREQ, LEDC_TIMER_BITS);
+  if (!ok) {
+    Serial.begin(115200);
+    Serial.println("Erro ao configurar o LEDC!");
+  }
 }
 
 void loop() {
 
-  ledcWrite(LEDC_CHANNEL_0, brightness);                        // define o brilho do LED
+  ledcWrite(ledPin, brightness);                                // define o brilho do LED
 
   brightness = brightness + fadeAmount;                         // altera o brilho para a próxima vez através do loop
 
